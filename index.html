@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CricScore Pro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">&#x1F3CF;</span>
+      <h1>CricScore Pro</h1>
+    </div>
+    <div class="header-actions">
+      <span id="statusBadge" class="status-badge status-live" onclick="toggleStatus()">&#x25CF; LIVE</span>
+      <button class="btn-icon" onclick="toggleTheme()">&#x1F319; Theme</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== MATCH HEADER ===== -->
+    <div class="match-header">
+      <div class="teams-row">
+        <div class="team-block">
+          <input class="team-name-input" id="teamA" value="Team India" oninput="updateAll()" />
+          <div class="team-score" id="scoreA">0/0</div>
+          <div class="team-overs" id="oversA">0.0 overs</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="team-block">
+          <input class="team-name-input" id="teamB" value="Team Australia" oninput="updateAll()" />
+          <div class="team-score" id="scoreB">0/0</div>
+          <div class="team-overs" id="oversB">0.0 overs</div>
+        </div>
+      </div>
+      <div class="match-meta">
+        <div class="meta-item">
+          <div class="meta-label">Run Rate</div>
+          <div class="meta-value" id="rrA">0.00</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Wickets</div>
+          <div class="meta-value" id="wktA">0</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Top Scorer</div>
+          <div class="meta-value" id="topScorer">-</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Best Bowler</div>
+          <div class="meta-value" id="bestBowler">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== INNINGS TABS ===== -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchInnings(1, this)">&#x1F3CF; 1st Innings</button>
+      <button class="tab" onclick="switchInnings(2, this)">&#x1F3CF; 2nd Innings</button>
+    </div>
+
+    <!-- ===== BATTING SECTION ===== -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">&#x1F3CF; Batting Scorecard</span>
+        <span class="hint-text">SR = (Runs / Balls) x 100</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Batsman</th>
+              <th>Dismissal</th>
+              <th>Bowler</th>
+              <th>R</th>
+              <th>B</th>
+              <th>4s</th>
+              <th>6s</th>
+              <th>SR</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="battingBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-add" onclick="addBatsman()">+ Add Batsman</button>
+    </div>
+
+    <!-- ===== BOWLING SECTION ===== -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">&#x1F3B3; Bowling Figures</span>
+        <span class="hint-text">Economy = Runs / Overs</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Bowler</th>
+              <th>O</th>
+              <th>M</th>
+              <th>R</th>
+              <th>W</th>
+              <th>ECON</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="bowlingBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-add" onclick="addBowler()">+ Add Bowler</button>
+    </div>
+
+    <!-- ===== MATCH SUMMARY ===== -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">&#x1F4CA; Match Summary</span>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="s-label">Total Runs</div>
+          <div class="s-value" id="sumRuns">0</div>
+          <div class="s-sub">runs scored</div>
+        </div>
+        <div class="summary-box">
+          <div class="s-label">Wickets</div>
+          <div class="s-value" id="sumWkts">0</div>
+          <div class="s-sub">fallen</div>
+        </div>
+        <div class="summary-box">
+          <div class="s-label">Overs</div>
+          <div class="s-value" id="sumOvers">0.0</div>
+          <div class="s-sub">bowled</div>
+        </div>
+        <div class="summary-box">
+          <div class="s-label">Run Rate</div>
+          <div class="s-value" id="sumRR">0.00</div>
+          <div class="s-sub">per over</div>
+        </div>
+        <div class="summary-box">
+          <div class="s-label">Boundaries</div>
+          <div class="s-value" id="sumBound">0</div>
+          <div class="s-sub">4s and 6s</div>
+        </div>
+        <div class="summary-box">
+          <div class="s-label">Top Score</div>
+          <div class="s-value" id="sumTop">0</div>
+          <div class="s-sub">highest runs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ACTION BUTTONS ===== -->
+    <div class="actions-row">
+      <button class="btn-primary" onclick="saveToLocal()">Save Scorecard</button>
+      <button class="btn-primary" onclick="downloadPDF()">Download PDF</button>
+      <button class="btn-secondary" onclick="loadFromLocal()">Load Saved</button>
+      <button class="btn-danger" onclick="resetMatch()">Reset Match</button>
+    </div>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Link to external JavaScript -->
+  <script src="script.js"></script>
+
+</body>
+</html>
